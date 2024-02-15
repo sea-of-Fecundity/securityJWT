@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    username: testsecurity
+    password: '0000'
+    url: jdbc:mariadb://localhost:3306/testsecurity
+    driver-class-name: org.mariadb.jdbc.Driver
