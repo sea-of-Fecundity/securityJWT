@@ -11,3 +11,11 @@ spring:
 
   jwt:
     secret: sadifnsakdlfaslkdjfklsadjfklsadjflskdjflksdajlksadjflkvds
+
+login:
+  url: "/login"
+
+
+
+front:
+  url: http://localhost:3000
