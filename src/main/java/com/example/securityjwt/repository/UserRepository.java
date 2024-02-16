@@ -1,9 +1,14 @@
 package com.example.securityjwt.repository;
 
-import com.example.securityjwt.domain.User;
+import com.example.securityjwt.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
 
-    public boolean existsByAddress(String address);
+public interface UserRepository extends JpaRepository<Member, Long> {
+
+    boolean existsByAddress(String address);
+
+    Optional<Member> findByAddress(String address);
+
 }

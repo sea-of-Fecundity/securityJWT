@@ -1,10 +1,11 @@
 package com.example.securityjwt.config;
 
 
+import com.example.securityjwt.jwt.JWTFilter;
+import com.example.securityjwt.jwt.JwtUtil;
 import com.example.securityjwt.jwt.LoginFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,8 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final ObjectMapper objectMapper;
+    private final JwtUtil jwtUtil;
+    private final static String LOGIN_URL = "/login";
 
 
     @Bean
@@ -37,12 +40,21 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/admin", "/join").permitAll()
+                        .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().permitAll());
 
         http
-                .addFilterAt(new LoginFilter("/login",authenticationManager(authenticationConfiguration), objectMapper),
+                .addFilterAt(LoginFilter.builder()
+                                .jwtUtil(jwtUtil)
+                                .defaultFilterProcessesUrl(LOGIN_URL)
+                                .objectMapper(objectMapper)
+                                .authenticationManager(authenticationManager(authenticationConfiguration))
+                                .build(),
                         UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class);
 
         http
                 .csrf(AbstractHttpConfigurer::disable)

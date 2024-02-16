@@ -1,0 +1,2 @@
+GET http://localhost:8080/myPage
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhZGRyZXNzIjoiaGVsbG9AbmF2ZS5jb20iLCJpYXQiOjE3MDgwODUzNTYsImV4cCI6MTcwODA4NTM5Mn0.rtl2G80l01rSlOvpjyVTd4PIIyn7-w0D6Lhxf2Gr65w
