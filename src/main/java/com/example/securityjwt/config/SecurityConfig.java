@@ -54,12 +54,12 @@ public class SecurityConfig {
 
                 .sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http
+        http.
+            securityMatcher("/myPage", "admin" , "/login")
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/join", "/login", "/").permitAll()
-                        .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .anyRequest().permitAll());
+                .requestMatchers("/join", "/").permitAll()
+                .anyRequest().permitAll());
+
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
