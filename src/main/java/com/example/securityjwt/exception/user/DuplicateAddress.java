@@ -1,8 +1,11 @@
 package com.example.securityjwt.exception.user;
 
 public class DuplicateAddress extends RuntimeException{
-    public DuplicateAddress(String message) {
 
+    private final static String MESSAGE = "중복된 이메일입니다.";
+
+    public DuplicateAddress(String message) {
+    super(MESSAGE);
 
     }
 

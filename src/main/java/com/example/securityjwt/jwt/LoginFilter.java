@@ -2,7 +2,6 @@ package com.example.securityjwt.jwt;
 
 
 import com.example.securityjwt.exception.Login.LoginFailedException;
-import com.example.securityjwt.response.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,7 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +26,6 @@ import java.util.Iterator;
 @Slf4j
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     private final JwtUtil jwtUtil;
-
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
 
@@ -58,7 +58,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-
+        log.info("===========LoginFilter============");
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String username = customUserDetails.getUsername();
@@ -74,6 +74,8 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         response.addHeader("Authorization", "Bearer " + token);
 
         log.info("login success{}", username);
+        log.info("login Authorization {}", response.getHeader("Authorization"));
+
     }
 
     @Override

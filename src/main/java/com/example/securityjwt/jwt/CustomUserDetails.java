@@ -1,4 +1,4 @@
-package com.example.securityjwt.response;
+package com.example.securityjwt.jwt;
 
 import com.example.securityjwt.domain.Member;
 import lombok.RequiredArgsConstructor;

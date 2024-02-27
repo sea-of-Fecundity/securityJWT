@@ -32,47 +32,45 @@ public class SecurityConfig {
 
     @Value("${front.url}")
     private String front_url;
+
     private final AuthenticationConfiguration authenticationConfiguration;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
 
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors((corsCustomizer -> corsCustomizer.configurationSource(request -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(Collections.singletonList(front_url));
-                    configuration.setAllowedMethods(Collections.singletonList("*"));
-                    configuration.setAllowCredentials(true);
-                    configuration.setAllowedHeaders(Collections.singletonList("*"));
-                    configuration.setMaxAge(3600L);
-
-                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
-                    return configuration;
-                })));
+                .sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/admin", "/join").permitAll()
+                        .requestMatchers("/join", "/login", "/").permitAll()
                         .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().permitAll());
 
         http
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable);
+
+        http
                 .addFilterAt(LoginFilter.builder()
-                                .jwtUtil(jwtUtil)
                                 .defaultFilterProcessesUrl(login_url)
                                 .objectMapper(objectMapper)
+                                .jwtUtil(jwtUtil)
                                 .authenticationManager(authenticationManager(authenticationConfiguration))
                                 .build(),
                         UsernamePasswordAuthenticationFilter.class);
@@ -81,17 +79,18 @@ public class SecurityConfig {
                 .addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class);
 
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable);
+                .cors((corsCustomizer -> corsCustomizer.configurationSource(request -> {
+                    CorsConfiguration configuration = new CorsConfiguration();
+                    configuration.setAllowedOrigins(Collections.singletonList(front_url));
+                    configuration.setAllowedMethods(Collections.singletonList("*"));
+                    configuration.setAllowCredentials(true);
+                    configuration.setAllowedHeaders(Collections.singletonList("*"));
+                    configuration.setMaxAge(3600L);
+                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
-        http
-                .sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                    return configuration;
+                })));
+
         return http.build();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

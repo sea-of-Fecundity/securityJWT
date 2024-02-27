@@ -13,9 +13,4 @@ public class SecurityJwtApplication {
         SpringApplication.run(SecurityJwtApplication.class, args);
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
 }

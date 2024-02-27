@@ -2,7 +2,7 @@ package com.example.securityjwt.controller;
 
 import com.example.securityjwt.request.JoinDTO;
 import com.example.securityjwt.service.MemberService;
-import lombok.Getter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -19,8 +19,9 @@ public class UserController {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/join")
-    public void join(@Validated @RequestBody JoinDTO joinDTO) {
+    public String join(@Valid @RequestBody JoinDTO joinDTO) {
         memberService.save(joinDTO.toEntity());
+        return "joinSuccess";
     }
 
 

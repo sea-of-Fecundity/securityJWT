@@ -4,7 +4,7 @@ package com.example.securityjwt.service;
 import com.example.securityjwt.domain.Member;
 import com.example.securityjwt.exception.user.AddressNotFoundException;
 import com.example.securityjwt.repository.UserRepository;
-import com.example.securityjwt.response.CustomUserDetails;
+import com.example.securityjwt.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
