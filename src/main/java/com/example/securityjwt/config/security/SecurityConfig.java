@@ -1,9 +1,8 @@
-package com.example.securityjwt.config;
+package com.example.securityjwt.config.security;
 
 
 import com.example.securityjwt.jwt.JWTFilter;
 import com.example.securityjwt.jwt.JwtUtil;
-import com.example.securityjwt.jwt.LoginFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,15 +50,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-
                 .sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.
-            securityMatcher("/myPage", "admin" , "/login")
+            securityMatcher("/login")
                 .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/join", "/").permitAll()
+                .requestMatchers("/admin", "/myPage").hasAnyRole("ADMIN", "USER")
                 .anyRequest().permitAll());
-
 
         http
                 .csrf(AbstractHttpConfigurer::disable)

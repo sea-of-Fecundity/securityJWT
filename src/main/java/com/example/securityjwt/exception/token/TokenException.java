@@ -1,7 +1,7 @@
 package com.example.securityjwt.exception.token;
 
 
-public class TokenException extends  RuntimeException{
+public abstract class TokenException extends  RuntimeException{
     public TokenException() {
         super();
     }

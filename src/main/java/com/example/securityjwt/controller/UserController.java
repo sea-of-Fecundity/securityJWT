@@ -25,7 +25,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/myPage")
+    @GetMapping("/mypage")
     public String myPage() {
         return "myPage";
     }

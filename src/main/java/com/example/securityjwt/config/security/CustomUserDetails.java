@@ -1,6 +1,7 @@
-package com.example.securityjwt.jwt;
+package com.example.securityjwt.config.security;
 
 import com.example.securityjwt.domain.Member;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,27 +11,30 @@ import java.util.Collection;
 
 
 @RequiredArgsConstructor
+@Builder
 public class CustomUserDetails implements UserDetails {
 
-    private final Member member;
+
+    private final String address;
+    private final String password;
+    private final String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add((GrantedAuthority) member::getRole);
-
+        collection.add((GrantedAuthority) this::getAuthority);
         return collection;
     }
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return member.getAddress();
+        return this.address;
     }
 
 
@@ -52,5 +56,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    private String getAuthority() {
+        return role;
     }
 }

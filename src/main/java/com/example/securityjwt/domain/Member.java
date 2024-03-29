@@ -18,8 +18,10 @@ public class Member {
     @Column(unique = true)
     private String address;
 
+    @Column(unique = true)
     private String userName;
 
+    @Column(unique = true)
     private String password;
 
     private String role;

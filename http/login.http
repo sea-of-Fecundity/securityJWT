@@ -3,6 +3,6 @@ Content-Type: application/json
 Authorization:
 
 {
-  "address": "hello@nave.com",
+  "address": "newId@nave.com",
   "password": "1234"
 }
