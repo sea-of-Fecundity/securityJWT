@@ -3,6 +3,8 @@ package com.example.securityjwt.config.security;
 
 import com.example.securityjwt.jwt.JWTFilter;
 import com.example.securityjwt.jwt.JwtUtil;
+import com.example.securityjwt.repository.RefreshRepository;
+import com.example.securityjwt.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Collections;
@@ -32,6 +35,7 @@ public class SecurityConfig {
     @Value("${front.url}")
     private String front_url;
 
+    private final RefreshTokenService refreshTokenService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
@@ -53,7 +57,7 @@ public class SecurityConfig {
                 .sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.
-            securityMatcher("/login")
+            securityMatcher("/login", "/logout")
                 .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/join", "/").permitAll()
                 .requestMatchers("/admin", "/myPage").hasAnyRole("ADMIN", "USER")
@@ -67,15 +71,22 @@ public class SecurityConfig {
 
         http
                 .addFilterAt(LoginFilter.builder()
-                                .defaultFilterProcessesUrl(login_url)
-                                .objectMapper(objectMapper)
-                                .jwtUtil(jwtUtil)
-                                .authenticationManager(authenticationManager(authenticationConfiguration))
-                                .build(),
+                    .defaultFilterProcessesUrl(login_url)
+                    .objectMapper(objectMapper)
+                    .jwtUtil(jwtUtil)
+                    .authenticationManager(authenticationManager(authenticationConfiguration))
+                    .refreshTokenService(refreshTokenService)
+                    .build(),
                         UsernamePasswordAuthenticationFilter.class);
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
+        http
+                .addFilterBefore(CustomLogoutFilter.builder()
+                        .jwtUtil(jwtUtil)
+                        .refreshTokenService(refreshTokenService)
+                        .build(), LogoutFilter.class);
 
         http
                 .cors((corsCustomizer -> corsCustomizer.configurationSource(request -> {

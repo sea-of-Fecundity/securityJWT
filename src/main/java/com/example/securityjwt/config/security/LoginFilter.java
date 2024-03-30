@@ -1,8 +1,11 @@
 package com.example.securityjwt.config.security;
 
 
+import com.example.securityjwt.domain.Refresh;
 import com.example.securityjwt.exception.Login.LoginFailedException;
 import com.example.securityjwt.jwt.JwtUtil;
+import com.example.securityjwt.repository.RefreshRepository;
+import com.example.securityjwt.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,9 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +25,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 @Slf4j
@@ -32,12 +34,17 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
 
+    private final RefreshTokenService refreshTokenService;
+
     @Builder
-    public LoginFilter(String defaultFilterProcessesUrl, JwtUtil jwtUtil, AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
+    public LoginFilter(String defaultFilterProcessesUrl, JwtUtil jwtUtil,
+                       AuthenticationManager authenticationManager, ObjectMapper objectMapper,
+                       RefreshTokenService refreshTokenService) {
         super(defaultFilterProcessesUrl);
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.objectMapper = objectMapper;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -63,14 +70,16 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         log.info("===========LoginFilter============");
 
-        String username = authentication.getName();
+        String address = authentication.getName();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", username, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        String access = jwtUtil.createJwt("access", address, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", address, role, 86400000L);
+
+        addRefresh(address, refresh, 86400000L);
 
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
@@ -80,6 +89,17 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         throw new LoginFailedException();
+    }
+
+    private void addRefresh(String address, String refresh, Long expiredMs) {
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+        Refresh refreshDomain = Refresh.builder()
+                .userAddress(address)
+                .refresh(refresh)
+                .expired(expiredMs.toString())
+                .build();
+
+        refreshTokenService.save(refreshDomain);
     }
 
     @Getter
