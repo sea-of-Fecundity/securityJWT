@@ -2,6 +2,7 @@ package com.example.securityjwt.jwt;
 
 import com.example.securityjwt.exception.token.AccessTokenNotFoundException;
 import com.example.securityjwt.exception.token.TokenExpiredException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,18 +28,25 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String accessToken = request.getHeader("access");
         if (accessToken == null) {
-//            throw new AccessTokenNotFoundException();
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e) {
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         String category = jwtUtil.getCategory(accessToken);
         if (!category.equals("access")) {
-            throw new AccessTokenNotFoundException();
-        }
-
-
-        else if (jwtUtil.isExpired(accessToken)) {
-            throw new TokenExpiredException();
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
 
         String address = jwtUtil.getAddress(accessToken);

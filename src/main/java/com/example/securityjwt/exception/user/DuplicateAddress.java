@@ -6,7 +6,11 @@ public class DuplicateAddress extends RuntimeException{
 
     public DuplicateAddress(String message) {
     super(MESSAGE);
+    }
 
+
+    public DuplicateAddress() {
+        super(MESSAGE);
     }
 
     public DuplicateAddress(String message, Throwable cause) {

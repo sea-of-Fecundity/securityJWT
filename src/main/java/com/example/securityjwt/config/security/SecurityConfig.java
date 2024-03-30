@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/join", "/").permitAll()
                 .requestMatchers("/admin", "/myPage").hasAnyRole("ADMIN", "USER")
+                .requestMatchers("/reissue").permitAll()
                 .anyRequest().permitAll());
 
         http
@@ -74,7 +75,7 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         http
                 .cors((corsCustomizer -> corsCustomizer.configurationSource(request -> {
