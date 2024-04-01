@@ -19,3 +19,10 @@ login:
 
 front:
   url: http://localhost:3000
+
+security:
+  token:
+    access:
+      expirationMinutes: 60
+    refresh:
+      expirationDays: 1

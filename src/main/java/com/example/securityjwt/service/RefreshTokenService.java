@@ -1,5 +1,6 @@
 package com.example.securityjwt.service;
 
+import com.example.securityjwt.config.properties.TokenProperties;
 import com.example.securityjwt.domain.Refresh;
 import com.example.securityjwt.exception.token.RefreshTokenNotFoundException;
 import com.example.securityjwt.jwt.JwtUtil;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class RefreshTokenService {
 
     private final RefreshRepository refreshRepository;
     private final JwtUtil jwtUtil;
-
+    private final TokenProperties tokenProperties;
 
     public Boolean checkRefreshToken(String refresh) {
         return refreshRepository.existsByRefresh(refresh);
@@ -60,23 +62,23 @@ public class RefreshTokenService {
         String role = jwtUtil.getRole(refresh);
 
 
-        String newAccess = jwtUtil.createJwt("access", address, role, 600000L);
-        String newRefresh = jwtUtil.createJwt("refresh", address, role, 86400000L);
+        String newAccess = jwtUtil.createJwt("access", address, role, tokenProperties.getAccessTokenExpirationMinutes());
+        String newRefresh = jwtUtil.createJwt("refresh", address, role, tokenProperties.getRefreshTokenExpirationDays());
 
         refreshRepository.deleteByRefresh(refresh);
 
-        addRefreshEntity(address, refresh, 86400000L);
+        addRefreshEntity(address, refresh, tokenProperties.getRefreshTokenExpirationDays());
 
         response.setHeader("access", newAccess);
         response.addCookie(createCookies("refresh", newRefresh));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void addRefreshEntity(String addess, String refresh, Long expiredMs) {
+    private void addRefreshEntity(String address, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
         Refresh refreshEntity = Refresh.builder()
-                .userAddress(addess)
+                .userAddress(address)
                 .refresh(refresh)
                 .expired(date.toString())
                 .build();
@@ -92,5 +94,10 @@ public class RefreshTokenService {
     }
     public void save(Refresh refresh) {
         refreshRepository.save(refresh);
+    }
+
+
+    public void deleteExpiredRefreshToken() {
+
     }
 }
