@@ -5,10 +5,12 @@ import com.example.securityjwt.domain.Refresh;
 import com.example.securityjwt.exception.token.RefreshTokenNotFoundException;
 import com.example.securityjwt.jwt.JwtUtil;
 import com.example.securityjwt.repository.RefreshRepository;
+import com.example.securityjwt.response.NewToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +41,7 @@ public class RefreshTokenService {
     }
 
 
-    public ResponseEntity<String> checkCookie(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
+    public NewToken checkCookie(Cookie[] cookies) {
 
         String refresh = Arrays.stream(cookies)
                 .filter(cookie -> REFRESH_TOKEN_NAME.equals(cookie.getName()))
@@ -54,11 +55,11 @@ public class RefreshTokenService {
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
+            throw new RefreshTokenNotFoundException();
         }
 
         if (!category.equals(REFRESH_TOKEN_NAME) || !isExist) {
-            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
+            throw new RefreshTokenNotFoundException();
         }
 
         String address = jwtUtil.getAddress(refresh);
@@ -74,10 +75,12 @@ public class RefreshTokenService {
         refreshRepository.deleteByRefresh(refresh);
 
         addRefreshEntity(address, refresh, tokenProperties.getRefreshTokenExpirationDays());
+        Cookie newCookies = createCookies(REFRESH_TOKEN_NAME, newRefresh);
 
-        response.setHeader(ACCESS_TOKEN_NAME, newAccess);
-        response.addCookie(createCookies(REFRESH_TOKEN_NAME, newRefresh));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return NewToken.builder()
+                .newAccessToken(newAccess)
+                .newCookie(newCookies)
+                .build();
     }
 
 
@@ -111,4 +114,5 @@ public class RefreshTokenService {
                 .filter((refresh) -> refresh.getExpired() <= System.currentTimeMillis())
                 .forEach((domain) -> refreshRepository.deleteById(domain.getId()));
     }
+
 }

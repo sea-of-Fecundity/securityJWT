@@ -6,4 +6,9 @@ public class TokenExpiredException extends TokenException{
     public TokenExpiredException() {
         super(MESSAGE);
     }
+
+    @Override
+    public int statusCode() {
+        return 401;
+    }
 }

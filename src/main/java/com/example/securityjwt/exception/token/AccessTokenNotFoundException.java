@@ -7,4 +7,9 @@ public class AccessTokenNotFoundException extends TokenException{
     public AccessTokenNotFoundException() {
         super(MESSAGE);
     }
+
+    @Override
+    public int statusCode() {
+        return 400;
+    }
 }

@@ -13,4 +13,6 @@ public abstract class TokenException extends  RuntimeException{
     public TokenException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public abstract int statusCode();
 }

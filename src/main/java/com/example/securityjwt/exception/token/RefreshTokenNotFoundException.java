@@ -11,4 +11,9 @@ public class RefreshTokenNotFoundException extends TokenException{
     public RefreshTokenNotFoundException(String message) {
         super(message);
     }
+
+    @Override
+    public int statusCode() {
+        return 400;
+    }
 }
