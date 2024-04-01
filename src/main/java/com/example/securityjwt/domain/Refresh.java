@@ -15,10 +15,10 @@ public class Refresh {
 
     private String refresh;
 
-    private String expired;
+    private Long expired;
 
     @Builder
-    public Refresh(String userAddress, String refresh, String expired) {
+    public Refresh(String userAddress, String refresh, Long expired) {
         this.userAddress = userAddress;
         this.refresh = refresh;
         this.expired = expired;

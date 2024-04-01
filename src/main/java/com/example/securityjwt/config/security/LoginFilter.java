@@ -1,6 +1,7 @@
 package com.example.securityjwt.config.security;
 
 
+import com.example.securityjwt.config.properties.TokenProperties;
 import com.example.securityjwt.domain.Refresh;
 import com.example.securityjwt.exception.Login.LoginFailedException;
 import com.example.securityjwt.jwt.JwtUtil;
@@ -33,17 +34,18 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
-
+    private final TokenProperties tokenProperties;
     private final RefreshTokenService refreshTokenService;
 
     @Builder
     public LoginFilter(String defaultFilterProcessesUrl, JwtUtil jwtUtil,
-                       AuthenticationManager authenticationManager, ObjectMapper objectMapper,
+                       AuthenticationManager authenticationManager, ObjectMapper objectMapper, TokenProperties tokenProperties,
                        RefreshTokenService refreshTokenService) {
         super(defaultFilterProcessesUrl);
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.objectMapper = objectMapper;
+        this.tokenProperties = tokenProperties;
         this.refreshTokenService = refreshTokenService;
     }
 
@@ -76,10 +78,12 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", address, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", address, role, 86400000L);
+        String access = jwtUtil.createJwt("access", address, role,
+                tokenProperties.getAccessTokenExpirationMinutes());
+        String refresh = jwtUtil.createJwt("refresh", address, role,
+                tokenProperties.getRefreshTokenExpirationDays());
 
-        addRefresh(address, refresh, 86400000L);
+        addRefresh(address, refresh, tokenProperties.getRefreshTokenExpirationDays());
 
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
@@ -96,7 +100,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         Refresh refreshDomain = Refresh.builder()
                 .userAddress(address)
                 .refresh(refresh)
-                .expired(expiredMs.toString())
+                .expired(date.getTime())
                 .build();
 
         refreshTokenService.save(refreshDomain);
@@ -112,7 +116,6 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     private Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setHttpOnly(true);
-
         return cookie;
     }
 }

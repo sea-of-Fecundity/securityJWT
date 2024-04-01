@@ -38,6 +38,4 @@ public class MemberService {
             userRepository.save(member);
         }
     }
-
-
 }

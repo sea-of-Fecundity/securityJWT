@@ -15,6 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.example.securityjwt.config.properties.TokenProperties.ACCESS_TOKEN_NAME;
+
 @RequiredArgsConstructor
 @Slf4j
 public class JWTFilter extends OncePerRequestFilter {
@@ -26,7 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String accessToken = request.getHeader("access");
+        String accessToken = request.getHeader(ACCESS_TOKEN_NAME);
         if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
@@ -42,7 +44,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         String category = jwtUtil.getCategory(accessToken);
-        if (!category.equals("access")) {
+        if (!category.equals(ACCESS_TOKEN_NAME)) {
             PrintWriter writer = response.getWriter();
             writer.print("invalid access token");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

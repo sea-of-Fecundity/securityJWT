@@ -13,6 +13,11 @@ public class TokenProperties {
     @Value("${security.token.refresh.expirationDays}")
     private Long refreshTokenExpirationDays;
 
+    public static final String ACCESS_TOKEN_NAME = "access";
+
+    public static final String REFRESH_TOKEN_NAME = "refresh";
+
+
     public Long getAccessTokenExpirationMinutes() {
         return accessTokenExpirationMinutes * 60000;
     }

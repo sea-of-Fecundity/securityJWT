@@ -1,6 +1,7 @@
 package com.example.securityjwt.config.security;
 
 
+import com.example.securityjwt.config.properties.TokenProperties;
 import com.example.securityjwt.jwt.JWTFilter;
 import com.example.securityjwt.jwt.JwtUtil;
 import com.example.securityjwt.repository.RefreshRepository;
@@ -39,6 +40,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
+    private final TokenProperties tokenProperties;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -76,6 +78,7 @@ public class SecurityConfig {
                     .jwtUtil(jwtUtil)
                     .authenticationManager(authenticationManager(authenticationConfiguration))
                     .refreshTokenService(refreshTokenService)
+                    .tokenProperties(tokenProperties)
                     .build(),
                         UsernamePasswordAuthenticationFilter.class);
 
