@@ -1,7 +1,5 @@
 package com.example.securityjwt.jwt;
 
-import com.example.securityjwt.exception.token.AccessTokenNotFoundException;
-import com.example.securityjwt.exception.token.TokenExpiredException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -54,9 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String address = jwtUtil.getAddress(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-
-//        new UsernamePasswordAuthenticationToken();
-
+        //todo  address, role 값을 획득
 
     }
 }

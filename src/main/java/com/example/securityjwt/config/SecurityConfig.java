@@ -1,7 +1,9 @@
-package com.example.securityjwt.config.security;
+package com.example.securityjwt.config;
 
 
 import com.example.securityjwt.config.properties.TokenProperties;
+import com.example.securityjwt.config.security.CustomLogoutFilter;
+import com.example.securityjwt.config.security.LoginFilter;
 import com.example.securityjwt.jwt.JWTFilter;
 import com.example.securityjwt.jwt.JwtUtil;
 import com.example.securityjwt.repository.RefreshRepository;

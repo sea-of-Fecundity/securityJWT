@@ -8,16 +8,17 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private SecretKey secretKey;
+    private final SecretKey secretKey = SecureKeyGenerator.generateKey();
 
-    public JwtUtil(@Value("${spring.jwt.secret}") String secretKey) {
-        this.secretKey = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+    public JwtUtil() throws NoSuchAlgorithmException {
     }
+
 
     public String getAddress(String token) {
         return Jwts.parser().verifyWith(secretKey)
