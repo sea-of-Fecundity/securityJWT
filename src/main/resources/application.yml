@@ -9,9 +9,6 @@ spring:
     url: jdbc:mariadb://localhost:3306/testsecurity
     driver-class-name: org.mariadb.jdbc.Driver
 
-  jwt:
-    secret: sadifnsakdlfaslkdjfklsadjfklsadjflskdjflksdajlksadjflkvds
-
 login:
   url: "/login"
 

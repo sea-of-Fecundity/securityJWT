@@ -2,10 +2,9 @@ package com.example.securityjwt.config.security;
 
 
 import com.example.securityjwt.config.properties.TokenProperties;
-import com.example.securityjwt.domain.Refresh;
+import com.example.securityjwt.domain.RefreshToken;
 import com.example.securityjwt.exception.Login.LoginFailedException;
 import com.example.securityjwt.jwt.JwtUtil;
-import com.example.securityjwt.repository.RefreshRepository;
 import com.example.securityjwt.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -97,13 +96,13 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private void addRefresh(String address, String refresh, Long expiredMs) {
         Date date = new Date(System.currentTimeMillis() + expiredMs);
-        Refresh refreshDomain = Refresh.builder()
+        RefreshToken refreshTokenDomain = RefreshToken.builder()
                 .userAddress(address)
                 .refresh(refresh)
                 .expired(date.getTime())
                 .build();
 
-        refreshTokenService.save(refreshDomain);
+        refreshTokenService.save(refreshTokenDomain);
     }
 
     @Getter

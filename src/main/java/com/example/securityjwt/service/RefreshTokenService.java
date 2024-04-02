@@ -1,19 +1,14 @@
 package com.example.securityjwt.service;
 
 import com.example.securityjwt.config.properties.TokenProperties;
-import com.example.securityjwt.domain.Refresh;
+import com.example.securityjwt.domain.RefreshToken;
 import com.example.securityjwt.exception.token.RefreshTokenNotFoundException;
 import com.example.securityjwt.jwt.JwtUtil;
 import com.example.securityjwt.repository.RefreshRepository;
 import com.example.securityjwt.response.NewToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -86,13 +81,13 @@ public class RefreshTokenService {
 
     private void addRefreshEntity(String address, String refresh, Long expiredMs) {
         Date date = new Date(System.currentTimeMillis() + expiredMs);
-        Refresh refreshEntity = Refresh.builder()
+        RefreshToken refreshTokenDomain = RefreshToken.builder()
                 .userAddress(address)
                 .refresh(refresh)
                 .expired(date.getTime())
                 .build();
 
-        save(refreshEntity);
+        save(refreshTokenDomain);
     }
 
 
@@ -104,14 +99,14 @@ public class RefreshTokenService {
     }
 
 
-    public void save(Refresh refresh) {
-        refreshRepository.save(refresh);
+    public void save(RefreshToken refreshToken) {
+        refreshRepository.save(refreshToken);
     }
 
 
     public void deleteExpiredRefreshToken() {
         refreshRepository.findAll().stream()
-                .filter((refresh) -> refresh.getExpired() <= System.currentTimeMillis())
+                .filter((refreshToken) -> refreshToken.getExpired() <= System.currentTimeMillis())
                 .forEach((domain) -> refreshRepository.deleteById(domain.getId()));
     }
 

@@ -6,7 +6,7 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Refresh {
+public class RefreshToken {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +18,7 @@ public class Refresh {
     private Long expired;
 
     @Builder
-    public Refresh(String userAddress, String refresh, Long expired) {
+    public RefreshToken(String userAddress, String refresh, Long expired) {
         this.userAddress = userAddress;
         this.refresh = refresh;
         this.expired = expired;
