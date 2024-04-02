@@ -2,11 +2,11 @@
 스프링 시큐리티와 jwt access, refresh 토큰을 공부하면서 만든 프로젝트입니다.
 
 ## 목차
-[1. 공부 기간](#-공부-기간)
-[2. 공부하면서 발생한 에러 상황](#-공부하면서-발생한-에러-상황)
-[3. 해결 방법](#-해결-방법)
-[4. 추가적인 기능](#-추가적인-기능)
-[5. 학습에 도움이 된 자료](#-학습에-도움이-된-자료)
+[1. 공부 기간](#공부-기간)
+[2. 공부하면서 발생한 에러 상황](#공부하면서-발생한-에러-상황)
+[3. 해결 방법](#해결-방법)
+[4. 추가적인 기능](#추가적인-기능)
+[5. 학습에 도움이 된 자료](#학습에-도움이-된-자료)
 
 ---
 
@@ -19,7 +19,7 @@
 3. before가 아닌 addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class)를 사용해서 에러가 발생했다. 
 
 # 해결 방법
-1. 기존 프로젝트에서 잘 작동 되었는데 6.0 버전에서만 에러가 발생하므로 6.0 버전의 공식문서를 확인했다. 기존의 메소드가 Deprecated되고 새로나온 securityMatcher가 나온 것을 확인하고 그것을 사용했다.
+1. 기존 프로젝트에서 잘 작동 되었는데 6.0 버전에서만 에러가 발생하므로 6.0 버전의 공식문서를 확인했다. 기존의 메소드가 Deprecated되고 새로나온 securityMatcher를 확인하고 기능을 알아보고 사용했다.
 2. 순서를 변경했다. LoginFilter.class가 만들어 지지 않았는데 addFilterBefore를 해서 발생했다.
 
 
@@ -63,4 +63,5 @@
 
 # 학습에 도움이 된 자료
 <https://www.youtube.com/watch?v=SxfweG-F6JM&list=PLJkjrxxiBSFATow4HY2qr5wLvXM6Rg-BM>
+
 <https://www.youtube.com/watch?v=NPRh2v7PTZg&list=PLJkjrxxiBSFCcOjy0AAVGNtIa08VLk1EJ>
