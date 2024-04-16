@@ -1,2 +1,2 @@
-GET http://localhost:8080/mypage
+GET http://localhost:8080/visitor
 access: eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsImFkZHJlc3MiOiJuZXdJZEBuYXZlLmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTMxNjk3MDEsImV4cCI6MTcxMzE3MzMwMX0.9tIosuuqYR1aF6i6-n-xVqQrbvPg-T6E-13PBcfaAiI

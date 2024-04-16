@@ -1,4 +1,4 @@
-package com.example.securityjwt.config;
+package com.example.securityjwt.config.security;
 
 
 import com.example.securityjwt.config.properties.TokenProperties;
@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -61,12 +62,14 @@ public class SecurityConfig {
                 .sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.
-            securityMatcher("/login", "/logout")
+            securityMatcher( "/**")
                 .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/join", "/").permitAll()
-                .requestMatchers("/admin", "/myPage").hasAnyRole("ADMIN", "USER")
-                .requestMatchers("/reissue").permitAll()
-                .anyRequest().permitAll());
+                    .requestMatchers("/join", "/").permitAll()
+                    .requestMatchers("/visitor").hasRole("VISITOR")
+                    .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers("/admin").hasRole("ADMIN")
+                    .requestMatchers("/reissue").permitAll()
+                .anyRequest().authenticated());
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
