@@ -9,6 +9,7 @@ import com.example.securityjwt.response.NewToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import static com.example.securityjwt.config.properties.TokenProperties.REFRESH_
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RefreshTokenService {
 
     private final RefreshRepository refreshRepository;
@@ -43,7 +45,7 @@ public class RefreshTokenService {
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(RefreshTokenNotFoundException::new);
-
+        log.info("refresh{}", refresh);
         Boolean isExist = refreshRepository.existsByRefresh(refresh);
         String category = jwtUtil.getCategory(refresh);
 
@@ -100,7 +102,9 @@ public class RefreshTokenService {
 
 
     public void save(RefreshToken refreshToken) {
-        refreshRepository.save(refreshToken);
+        if(!refreshRepository.existsByUserAddress(refreshToken.getUserAddress())) {
+            refreshRepository.save(refreshToken);
+        }
     }
 
 
@@ -110,4 +114,8 @@ public class RefreshTokenService {
                 .forEach((domain) -> refreshRepository.deleteById(domain.getId()));
     }
 
+    public void deleteAll() {
+        refreshRepository.deleteAll();
+
+    }
 }

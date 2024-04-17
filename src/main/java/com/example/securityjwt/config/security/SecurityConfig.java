@@ -69,7 +69,7 @@ public class SecurityConfig {
                     .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
                     .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/reissue").permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().fullyAuthenticated());
 
         http
                 .csrf(AbstractHttpConfigurer::disable)

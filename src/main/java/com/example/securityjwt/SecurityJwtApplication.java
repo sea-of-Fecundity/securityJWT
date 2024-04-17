@@ -31,8 +31,8 @@ public class SecurityJwtApplication {
     @Bean
     public ApplicationRunner applicationRunner() {
         return args -> {
-            refreshTokenService.deleteExpiredRefreshToken();
-            log.info("delete");
+            refreshTokenService.deleteAll();
         } ;
+
     }
 }
