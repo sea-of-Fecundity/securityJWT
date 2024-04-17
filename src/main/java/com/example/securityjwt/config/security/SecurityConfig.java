@@ -2,11 +2,8 @@ package com.example.securityjwt.config.security;
 
 
 import com.example.securityjwt.config.properties.TokenProperties;
-import com.example.securityjwt.config.security.CustomLogoutFilter;
-import com.example.securityjwt.config.security.LoginFilter;
 import com.example.securityjwt.jwt.JWTFilter;
 import com.example.securityjwt.jwt.JwtUtil;
-import com.example.securityjwt.repository.RefreshRepository;
 import com.example.securityjwt.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
