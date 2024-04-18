@@ -3,7 +3,7 @@ package com.example.securityjwt.service;
 import com.example.securityjwt.config.properties.TokenProperties;
 import com.example.securityjwt.domain.RefreshToken;
 import com.example.securityjwt.exception.token.RefreshTokenNotFoundException;
-import com.example.securityjwt.jwt.JwtUtil;
+import com.example.securityjwt.security.jwt.JwtUtil;
 import com.example.securityjwt.repository.RefreshRepository;
 import com.example.securityjwt.response.NewToken;
 import io.jsonwebtoken.ExpiredJwtException;

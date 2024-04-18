@@ -1,10 +1,10 @@
-package com.example.securityjwt.config.security;
+package com.example.securityjwt.security;
 
 
 import com.example.securityjwt.config.properties.TokenProperties;
 import com.example.securityjwt.domain.RefreshToken;
 import com.example.securityjwt.exception.Login.LoginFailedException;
-import com.example.securityjwt.jwt.JwtUtil;
+import com.example.securityjwt.security.jwt.JwtUtil;
 import com.example.securityjwt.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -58,10 +58,12 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
                     loginJson.getPassword());
 
         // Allow subclasses to set the "details" property
-        setDetails(request, authRequest);
+        this.setDetails(request, authRequest);
 
         return this.authenticationManager.authenticate(authRequest);
     }
+
+
 
     protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));

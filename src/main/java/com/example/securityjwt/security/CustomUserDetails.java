@@ -1,7 +1,8 @@
-package com.example.securityjwt.config.security;
+package com.example.securityjwt.security;
 
 import com.example.securityjwt.domain.Member;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.Collection;
 public class CustomUserDetails implements UserDetails {
 
 
+    @Getter
     private final String address;
     private final String password;
     private final String role;

@@ -2,11 +2,14 @@ package com.example.securityjwt.config.security;
 
 
 import com.example.securityjwt.config.properties.TokenProperties;
-import com.example.securityjwt.jwt.JWTFilter;
-import com.example.securityjwt.jwt.JwtUtil;
+import com.example.securityjwt.security.jwt.JWTFilter;
+import com.example.securityjwt.security.jwt.JwtUtil;
+import com.example.securityjwt.security.CustomLogoutFilter;
+import com.example.securityjwt.security.LoginFilter;
 import com.example.securityjwt.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +29,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -48,6 +52,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        log.info("configuration: {}", configuration.getAuthenticationManager().toString());
         return configuration.getAuthenticationManager();
     }
 

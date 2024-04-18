@@ -1,4 +1,4 @@
-package com.example.securityjwt.config.security;
+package com.example.securityjwt.security;
 
 
 import com.example.securityjwt.domain.Member;

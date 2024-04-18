@@ -20,7 +20,6 @@ public class MethodSecurity {
     }
 
 
-
     @Bean
     static RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();

@@ -3,7 +3,7 @@ package com.example.securityjwt.exception.token;
 public class RefreshTokenNotFoundException extends TokenException{
 
 
-    private final static String MESSAGE = "refresh token을 찾지 못했습니다.";
+    private final static String MESSAGE = "Not Found Refresh Token";
     public RefreshTokenNotFoundException() {
         super();
     }

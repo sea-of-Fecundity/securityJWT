@@ -1,7 +1,7 @@
 package com.example.securityjwt.controller;
 
 
-import com.example.securityjwt.jwt.JwtUtil;
+import com.example.securityjwt.security.jwt.JwtUtil;
 import com.example.securityjwt.response.NewToken;
 import com.example.securityjwt.service.RefreshTokenService;
 import jakarta.servlet.http.Cookie;

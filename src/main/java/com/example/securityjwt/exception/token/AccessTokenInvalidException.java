@@ -2,7 +2,7 @@ package com.example.securityjwt.exception.token;
 
 public class AccessTokenInvalidException extends TokenException{
 
-    private final static String MESSAGE = "invalid refresh token";
+    private final static String MESSAGE = "Invalid Access Token";
 
     public AccessTokenInvalidException() {
         super(MESSAGE);

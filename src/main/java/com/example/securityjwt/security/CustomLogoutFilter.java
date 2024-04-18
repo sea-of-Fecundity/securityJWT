@@ -1,7 +1,7 @@
-package com.example.securityjwt.config.security;
+package com.example.securityjwt.security;
 
 import com.example.securityjwt.exception.token.RefreshTokenNotFoundException;
-import com.example.securityjwt.jwt.JwtUtil;
+import com.example.securityjwt.security.jwt.JwtUtil;
 import com.example.securityjwt.service.RefreshTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
