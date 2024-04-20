@@ -12,14 +12,21 @@ import java.util.Collection;
 
 
 @RequiredArgsConstructor
-@Builder
 public class CustomUserDetails implements UserDetails {
 
 
     @Getter
-    private final String address;
-    private final String password;
-    private final String role;
+    private  String address;
+    private  String password;
+    private  String role;
+
+
+    @Builder
+    public CustomUserDetails(String address, String password, String role) {
+        this.address = address;
+        this.password = password;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

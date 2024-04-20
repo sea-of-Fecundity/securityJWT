@@ -21,6 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import java.io.IOException;
@@ -52,26 +54,33 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
 
+        SecurityContext context = SecurityContextHolder.getContext();
+        log.info("attemptAuthentication에서의 SecurityContext 확인 :{} ", context);
+
         LoginJson loginJson = objectMapper.readValue(request.getInputStream(), LoginJson.class);
-        UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken
-                    .unauthenticated(loginJson.getAddress(),
-                    loginJson.getPassword());
+        UsernamePasswordAuthenticationToken unauthenticated = UsernamePasswordAuthenticationToken
+                .unauthenticated(loginJson.getAddress(),
+                        loginJson.getPassword());
 
         // Allow subclasses to set the "details" property
-        this.setDetails(request, authRequest);
+        this.setDetails(request, unauthenticated);
 
-        return this.authenticationManager.authenticate(authRequest);
+        return this.authenticationManager.authenticate(unauthenticated);
     }
 
 
 
-    protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
-        authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
+    protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken unauthenticated) {
+        unauthenticated.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         log.info("===========LoginFilter============");
+
+
+
+
 
         String address = authentication.getName();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
