@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @EnableMethodSecurity
 @Configuration
-public class MethodSecurity {
+public class MethodSecurityConfig {
 
     @Bean
     static MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
@@ -23,7 +23,7 @@ public class MethodSecurity {
     @Bean
     static RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_USER > ROLE_VISITOR");
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER > ROLE_VISITOR");
         return roleHierarchy;
     }
 }

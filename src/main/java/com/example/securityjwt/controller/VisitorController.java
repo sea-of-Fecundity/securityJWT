@@ -12,4 +12,9 @@ public class VisitorController {
     public String visitor() {
         return "hello visitor!";
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "hello test!";
+    }
 }
