@@ -20,6 +20,43 @@
 
 # 해결 방법
 1. 기존 프로젝트에서 잘 작동 되었는데 6.0 버전에서만 에러가 발생하므로 6.0 버전의 공식문서를 확인했다. 기존의 메소드가 Deprecated되고 새로나온 securityMatcher를 확인하고 기능을 알아보고 사용했다.
+
+[SecurityConfig](src/main/java/com/example/securityjwt/config/security/SecurityConfig.java)
+
+변경전
+```java
+
+http.
+                .authorizeHttpRequests((auth) -> auth
+                    .requestMatchers("/join", "/").permitAll()
+                    .requestMatchers("/visitor").hasRole("VISITOR")
+                    .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers("/test").hasRole("TEST")
+                    .requestMatchers("/admin").hasRole("ADMIN")
+                    .requestMatchers("/reissue").permitAll()
+                .anyRequest().fullyAuthenticated());
+
+
+```
+변경 후
+
+~~~java
+http.
+securityMatcher( "/**")
+                .authorizeHttpRequests((auth) -> auth
+                    .requestMatchers("/join", "/").permitAll()
+                    .requestMatchers("/visitor").hasRole("VISITOR")
+                    .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers("/test").hasRole("TEST")
+                    .requestMatchers("/admin").hasRole("ADMIN")
+                    .requestMatchers("/reissue").permitAll()
+                .anyRequest().fullyAuthenticated());
+
+~~~
+
+
+
+
 2. 순서를 변경했다. LoginFilter.class가 만들어 지지 않았는데 addFilterBefore를 해서 발생했다.
 
 
