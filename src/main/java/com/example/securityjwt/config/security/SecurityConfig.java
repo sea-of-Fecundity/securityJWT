@@ -68,7 +68,7 @@ public class SecurityConfig {
                     .requestMatchers("/join", "/").permitAll()
                     .requestMatchers("/visitor").hasRole("VISITOR")
                     .requestMatchers("/myPage").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/test").hasRole("TEST")
+                    .requestMatchers("/test").hasRole("TEST")
                     .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/reissue").permitAll()
                 .anyRequest().fullyAuthenticated());

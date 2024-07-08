@@ -15,6 +15,8 @@ public class MemberService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+
+
     public void save(Member member) {
 
         if (userRepository.existsByAddress(member.getAddress())) {

@@ -60,6 +60,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 .address(address)
                 .role(role)
                 .build();
+
         Authentication authentication = new UsernamePasswordAuthenticationToken(build,
                 null,
                 build.getAuthorities());

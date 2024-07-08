@@ -80,7 +80,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         Boolean isExist = refreshTokenService.checkRefreshToken(refresh);
         if (isExist) {
             refreshTokenService.deleteRefreshToken(refresh);
-
         }
 
 

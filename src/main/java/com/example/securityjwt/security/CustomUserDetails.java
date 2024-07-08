@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
@@ -71,3 +70,4 @@ public class CustomUserDetails implements UserDetails {
         return role;
     }
 }
+

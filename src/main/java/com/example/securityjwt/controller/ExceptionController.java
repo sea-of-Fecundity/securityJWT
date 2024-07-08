@@ -12,8 +12,6 @@ import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 @RestControllerAdvice
 public class ExceptionController {
 
-
-
     @ResponseBody
     @ExceptionHandler()
     public ResponseEntity<ErrorResponse> jwtException(Exception e) {
